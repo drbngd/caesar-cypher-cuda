@@ -1,0 +1,74 @@
+Name: Dhruv Raj Bangad
+
+================= Problem 1: =================
+Following is the result of run with problme size, N = 2^24.
+copy to gpu took 5.9 ms
+gpu shift cypher took 2.3 ms
+copy from gpu took 3.6 ms
+host shift cypher took 44.7 ms
+
+From here, we can name each of the following as follows:
+CPU Vairable Cost, CPU_vc = (host shift cypher time) = 44.7 ms
+GPU Variable Cost, GPU_vc = (copy to gpu time) + (copy from gpu time) = 5.9 + 3.6 = 9.5 ms
+GPU Fixed Cost, GPU_fc = (gpu shift cypher time) = 2.3 ms
+
+Both CPU_vc and GPU_vc are linearly dependent on the size of the input, N.
+=> CPU_vc = N/c1
+=> GPU_vc = N/c2
+Solving for c1, we get c1 = 2^24/44.7ms = 375,329
+=> CPU_vc = N/375,329 ms
+
+Solving for c2, we get c2 = 2^24/9.5ms = 1,766,023
+=> GPU_vc = N/1,766,023 ms
+
+GPU_fc is independent of the size of the input, N.
+=> GPU_fc = 2.3 ms
+
+Solving for N, such that total time cost of GPU and CPU is equivalent,
+=> CPU_vc = GPU_vc + GPU_fc
+=> N/375329 = N/1766023 + 2.3
+=> N = 1,096,238 = 2^20
+
+Thus the cross-over point is when N is around 2^20.
+
+This was verified by running the code with N = 2^20 and N = 2^21.
+Following were the results:
+
+N = 2^21:
+copy to gpu took 0.7 ms
+gpu shift cypher took 3.8 ms
+copy from gpu took 0.5 ms
+host shift cypher took 6.3 ms
+
+Total CPU time: 6.3 ms
+Total GPU time: 0.7 + 3.8 + 0.5 = 5 ms
+
+For N = 2^20:
+copy to gpu took 0.3 ms
+gpu shift cypher took 2.9 ms
+copy from gpu took 0.3 ms
+host shift cypher took 3.3 ms
+
+Total CPU time: 3.3 ms
+Total GPU time: 0.3 + 2.9 + 0.3 = 3.5 ms
+
+For N = 2^19
+copy to gpu took 0.2 ms
+gpu shift cypher took 2.8 ms
+copy from gpu took 0.2 ms
+host shift cypher took 1.9 ms
+
+Total CPU time: 1.9 ms
+Total GPU time: 0.2 + 2.8 + 0.2 = 3.2 ms
+
+From the above results, it is clear that the cross-over point is around 2^20.
+
+
+================= Problem 2: =================
+threadIdx.x is the index of the thread in the x-direction within the block
+since it is multiplied by 3, that mean its max width in the x-direction is 3
+threadIdx.y is the index of the thread in the y-direction within the block
+since it is multiplied by 2, that mean its max width in the y-direction is 2
+
+Hence, the number of threads in the block is 3 * 2 = 6
+
